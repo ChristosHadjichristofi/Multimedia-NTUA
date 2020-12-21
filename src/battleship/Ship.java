@@ -1,4 +1,4 @@
-package src;
+package src.battleship;
 
 import java.util.ArrayList;
 

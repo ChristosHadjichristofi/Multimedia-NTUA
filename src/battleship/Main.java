@@ -1,4 +1,4 @@
-package src;
+package src.battleship;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -75,6 +75,8 @@ public class Main {
                     y = scanner.nextInt();
                     while(x < 0 || x >= 10 || y < 0 || y >= 10){
                         System.out.println("Please give valid (x,y) coordinates: ");
+                        x = scanner.nextInt();
+                        y = scanner.nextInt();
                     }
                     shootCoords = new Pair<Integer, Integer>(x, y);
                 } while(!player.shoot(player, enemy, shootCoords.getX(), shootCoords.getY()));
@@ -88,6 +90,8 @@ public class Main {
                 enemy.move(player, enemy);
                 move = true;
                 enemy.availableShoots--;
+                System.out.println("");
+                player.grid.printGrids(enemy, player);
             }
         }
 

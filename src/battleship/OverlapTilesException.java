@@ -1,4 +1,4 @@
-package src;
+package src.battleship;
 
 public class OverlapTilesException extends Exception {
     

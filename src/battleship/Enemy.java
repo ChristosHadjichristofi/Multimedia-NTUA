@@ -1,9 +1,11 @@
-package src;
+package src.battleship;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Enemy extends Player {
+
+    ArrayList<Triplet<Integer, Integer, Integer>> nextShots;
 
     public Enemy(String name) {
         super(name);

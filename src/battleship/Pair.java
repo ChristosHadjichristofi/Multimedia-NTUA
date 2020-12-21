@@ -1,4 +1,4 @@
-package src;
+package src.battleship;
 
 public class Pair<T1, T2> {
 

@@ -1,4 +1,4 @@
-package src;
+package src.battleship;
 
 public class Triplet<T1, T2, T3> {
 

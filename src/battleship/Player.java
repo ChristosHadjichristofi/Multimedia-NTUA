@@ -1,4 +1,4 @@
-package src;
+package src.battleship;
 
 import java.util.ArrayList;
 
@@ -15,7 +15,6 @@ public class Player {
     int intactShips;
     int points;
     int successLastShot;
-    ArrayList<Triplet<Integer, Integer, Integer>> nextShots;
 
     public Player(String name){
         
