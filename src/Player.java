@@ -4,73 +4,128 @@ import java.util.ArrayList;
 
 public class Player {
     
-    Grid playerGrid;
+    Grid grid;
     Carrier carrier;
     Battleship battleship;
     Cruiser cruiser;
     Submarine submarine;
     Destroyer destroyer;
+    String name;
     int availableShoots;
+    int intactShips;
+    int points;
+    int successLastShot;
+    ArrayList<Triplet<Integer, Integer, Integer>> nextShots;
 
-    public Player(){
+    public Player(String name){
         
-        playerGrid = new Grid();
+        grid = new Grid();
+        this.name = name;
         availableShoots = 40;
+        intactShips = 5;
+        points = 0;
     }
 
-    public void addShip(int shipType, int cordX, int cordY, int orientation, Ship s) throws OversizeException, OverlapTilesException,
-            AdjacentTilesException {
+	public boolean shoot(Player p, Player e, int x, int y) {
+        
+        int valAtGrid = e.grid.shipTypeAtPos(x, y, e);
 
-        if (orientation == 1){
-            for (int j = cordY; j < cordY + s.size; j++) {
-                if (cordX < 0 || cordX >= 10 || j < 0 || j >= 10) throw new OversizeException("Cannot place ship of type " + s.type + ".It's not inside the grid!");
-                else{
-                    if (playerGrid.grid[cordX][j] != 0) throw new OverlapTilesException("Cannot place ship of type " + s.type + " because there is already ship of type " + playerGrid.grid[cordX][j] + ".");
-                    else{
-                       if (!validAdjacentTiles(cordX, j, s.type)) throw new AdjacentTilesException("Cannot place ship of type " + s.type + " because there is a ship in horizontal/vertical contact with it!");
-                       else{
-                           playerGrid.grid[cordX][j] = shipType;
-                           s.positions.add(new Pair<Integer,Integer>(cordX,j));
-                       }
-                    }
-                }
-            }
-        }   
-        else {
-            for (int i = cordX; i < cordX + s.size; i++) {
-                if (cordY < 0 || cordY >= 10 || i < 0 || i >= 10) throw new OversizeException("Cannot place ship of type " + s.type + ".It's not inside the grid!");
-                else{
-                    if (playerGrid.grid[i][cordY] != 0) throw new OverlapTilesException("Cannot place ship of type " + s.type + " because there is already ship of type " + playerGrid.grid[i][cordY] + ".");
-                    else{
-                        if (!validAdjacentTiles(i, cordY, s.type)) throw new AdjacentTilesException("Cannot place ship of type " + s.type + " because there is a ship in horizontal/vertical contact with it!");
-                        playerGrid.grid[i][cordY] = shipType;
-                        s.positions.add(new Pair<Integer,Integer>(i,cordY));
-                    }
-                }
-            }
-        }
-    }
+        switch(valAtGrid) {
+            case 0:
+              if (p.name == "player") System.out.println("Your shot went in the sea!");
+              if (p.name == "enemy") System.out.println("Enemy's shot went in the sea!");
+              e.grid.grid[x][y] = 7;
+              return true;
+            
+            case 1:
+              e.shipShotAt(p, e, x, y, e.carrier.positions);
+              if (p.name == "player") System.out.println("You shot a ship of type 1! This ship has " + e.carrier.positions.size() + " parts left!");
+              if (p.name == "enemy") System.out.println("Enemy shot your ship of type 1! This ship has " + e.carrier.positions.size() + " parts left!");
+              p.points += e.carrier.shotPoints;
+              p.successLastShot++;
+              if (e.carrier.checkStatus() == "sank"){
+                if (p.name == "player") System.out.println("Congrats! You sank enemy's ship of type 1!");
+                if (p.name == "enemy") System.out.println("Oh snap! Enemy sank your ship of type 1!");
+                p.points += e.carrier.bonusPoints;
+                e.intactShips--;
+              }                
+              return true;
+            
+            case 2:
+              e.shipShotAt(p, e, x, y, e.battleship.positions);
+              if (p.name == "player") System.out.println("You shot a ship of type 2! This ship has " + e.battleship.positions.size() + " parts left!");
+              if (p.name == "enemy") System.out.println("Enemy shot your ship of type 2! This ship has " + e.battleship.positions.size() + " parts left!");
+              p.points += e.battleship.shotPoints;
+              p.successLastShot++;
+              if (e.battleship.checkStatus() == "sank"){
+                if (p.name == "player") System.out.println("Congrats! You sank enemy's ship of type 2!");
+                if (p.name == "enemy") System.out.println("Oh snap! Enemy sank your ship of type 2!");
+                p.points += e.battleship.bonusPoints;
+                e.intactShips--;
+              } 
+              return true;
+            
+            case 3:
+              e.shipShotAt(p, e, x, y, e.cruiser.positions);
+              if (p.name == "player") System.out.println("You shot a ship of type 3! This ship has " + e.cruiser.positions.size() + " parts left!");
+              if (p.name == "enemy") System.out.println("Enemy shot your ship of type 3! This ship has " + e.cruiser.positions.size() + " parts left!");
+              p.points += e.cruiser.shotPoints;
+              p.successLastShot++;
+              if (e.cruiser.checkStatus() == "sank"){
+                if (p.name == "player") System.out.println("Congrats! You sank enemy's ship of type 3!");
+                if (p.name == "enemy") System.out.println("Oh snap! Enemy sank your ship of type 3!");
+                p.points += e.cruiser.bonusPoints;
+                e.intactShips--;
+              } 
+              return true;
+            
+            case 4:
+              e.shipShotAt(p, e, x, y, e.submarine.positions);
+              if (p.name == "player") System.out.println("You shot a ship of type 4! This ship has " + e.submarine.positions.size() + " parts left!");
+              if (p.name == "enemy") System.out.println("Enemy shot your ship of type 4! This ship has " + e.submarine.positions.size() + " parts left!");
+              p.points += e.submarine.shotPoints;
+              p.successLastShot++;
+              if (e.submarine.checkStatus() == "sank"){
+                if (p.name == "player") System.out.println("Congrats! You sank enemy's ship of type 4!");
+                if (p.name == "enemy") System.out.println("Oh snap! Enemy sank your ship of type 4!");
+                p.points += e.submarine.bonusPoints;
+                e.intactShips--;
+              } 
+              return true;
+            
+            case 5:
+              e.shipShotAt(p, e, x, y, e.destroyer.positions);
+              if (p.name == "player") System.out.println("You shot a ship of type 5! This ship has " + e.destroyer.positions.size() + " parts left!");
+              if (p.name == "enemy") System.out.println("Enemy shot your ship of type 5! This ship has " + e.submarine.positions.size() + " parts left!");
+              p.points += e.destroyer.shotPoints;
+              p.successLastShot++;
+              if (e.destroyer.checkStatus() == "sank"){
+                if (p.name == "player") System.out.println("Congrats! You sank enemy's ship of type 5!");
+                if (p.name == "enemy") System.out.println("Oh snap! Enemy sank your ship of type 5!");
+                p.points += e.destroyer.bonusPoints;
+                e.intactShips--;
+              } 
+              return true;
+            
+            case 6:
+              if (p.name == "player") System.out.println("You already shot at this position! It's a part of a ship that's hit!");
+              return false;
+            
+            default:
+              if (p.name == "player") System.out.println("You already shot at this position! It's sea!");
+              return false;
+          }
+	}
 
-    private boolean validAdjacentTiles(int x, int y, int type) {
-        int cordX, cordY;
-
-        ArrayList<Pair<Integer, Integer>> result = new ArrayList<Pair<Integer, Integer>>();
-        result.add(new Pair<Integer, Integer>(x - 1, y));
-        result.add(new Pair<Integer, Integer>(x + 1, y));
-        result.add(new Pair<Integer, Integer>(x, y - 1));
-        result.add(new Pair<Integer, Integer>(x, y + 1));
-
-        for (int i = 0; i < result.size(); i++) {
-            Pair<Integer, Integer> coordinates = result.get(i);
-            cordX = coordinates.getX();
-            cordY = coordinates.getY();
-
-            if (cordX < 0 || cordX >= 10 || cordY < 0 || cordY >= 10) result.remove(i);
-            else {
-                if (playerGrid.grid[cordX][cordY] != 0 && playerGrid.grid[cordX][cordY] != type) return false;
-                else result.remove(i);
-            }
-        }
-        return true;
+    private void shipShotAt(Player p, Player e, int x, int y, ArrayList<Pair<Integer, Integer>> positions) {
+        e.grid.grid[x][y] = 6;
+        int index = 0;
+        for (Pair<Integer, Integer> pos : positions) {
+          if (pos.getX() == x && pos.getY() == y){
+            positions.remove(index);
+            break;
+          }
+          index++;
+        }     
     }
 }
