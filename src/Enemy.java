@@ -13,14 +13,16 @@ public class Enemy extends Player {
 
         final int MAX = 10;
         final int MIN = 0;
+        Random x, y;
         Triplet<Integer, Integer, Integer> shootCoords;
 
         if (availableShoots == 40 || successLastShot == 0) {
 
-            Random x = new Random();
-            Random y = new Random();
-            shootCoords = new Triplet<Integer, Integer, Integer>(x.nextInt(MAX - MIN) + MIN, y.nextInt(MAX - MIN) + MIN, 0);
-            e.shoot(e, p, shootCoords.getX(), shootCoords.getY());
+            do {
+                x = new Random();
+                y = new Random();
+                shootCoords = new Triplet<Integer, Integer, Integer>(x.nextInt(MAX - MIN) + MIN, y.nextInt(MAX - MIN) + MIN, 0);
+            } while (!e.shoot(e, p, shootCoords.getX(), shootCoords.getY()));
             
             if (successLastShot > 0) 
                 e.nextShots = nextValidShoot(shootCoords.getX(), shootCoords.getY(), shootCoords.getOrientation());
