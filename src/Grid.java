@@ -46,7 +46,6 @@ public class Grid {
         System.out.println("");
     }
 
-    // 7 --> hit sea
     //  0 --> sea
     //  1 --> carrier
     //  2 --> battleship
@@ -54,6 +53,7 @@ public class Grid {
     //  4 --> submarine
     //  5 --> destroyer
     //  6 --> hit ship
+    //  7 --> hit sea
     public void printEnemyGridView(){
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; ++j) {
