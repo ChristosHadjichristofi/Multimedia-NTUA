@@ -13,21 +13,23 @@ public class Main {
     static Enemy enemy = new Enemy("enemy");
 
     public static void main(String[] args) throws IOException, InvalidCountException, OversizeException,
-            OverlapTilesException, AdjacentTilesException {
+            OverlapTilesException, AdjacentTilesException, NecessaryFileException {
 
         String pathPlayer = "medialab/player_default.txt";
         String pathEnemy = "medialab/enemy_default.txt";
         
         try {
             readInput(player, pathPlayer);
-        } catch (InvalidCountException e) {
+        } catch (InvalidCountException | NecessaryFileException e) {
             System.out.println(e.getMessage());
+            System.exit(-1);
         }
 
         try {
             readInput(enemy, pathEnemy);
-        } catch (InvalidCountException e) {
+        } catch (InvalidCountException | NecessaryFileException e) {
             System.out.println(e.getMessage());
+            System.exit(-1);
         }
 
         playGame();
@@ -105,89 +107,95 @@ public class Main {
     }
 
     public static void readInput(Player p, String path) throws IOException, InvalidCountException, OversizeException,
-            OverlapTilesException, AdjacentTilesException {
+            OverlapTilesException, AdjacentTilesException, NecessaryFileException {
         
         String line;
         int shipType, cordX, cordY, orientation;
         File input = new File(path);
+        BufferedReader reader;
         
-        BufferedReader reader = new BufferedReader(new FileReader(input));
 
         try {
-            while ((line = reader.readLine()) != null){
 
-                shipType = Character.getNumericValue(line.charAt(0));
-                cordX = Character.getNumericValue(line.charAt(2));
-                cordY = Character.getNumericValue(line.charAt(4));
-                orientation = Character.getNumericValue(line.charAt(6));
-    
-                if (shipType == 1){
-                    if (p.carrier == null) {
-                        p.carrier = new Carrier();
-                        try {
-                            p.carrier.addShip(p, shipType, cordX, cordY, orientation);
-                        } catch (OversizeException | OverlapTilesException | AdjacentTilesException e) {
-                            System.out.println(e.getMessage());
-                        }
-                    }
-                    else throw new InvalidCountException("This ship type (" + shipType + ") was already inserted in the grid!");
-                }
-                if (shipType == 2){
-                    if (p.battleship == null) {
-                        p.battleship = new Battleship();
-                        try {
-                            p.battleship.addShip(p, shipType, cordX, cordY, orientation);
-                        } catch (OversizeException | OverlapTilesException | AdjacentTilesException e) {
-                            System.out.println(e.getMessage());
-                        } 
-                    }
-                    else throw new InvalidCountException("This ship type (" + shipType + ") was already inserted in the grid!");
-                }
-                if (shipType == 3){
-                    if (p.cruiser == null) {
-                        p.cruiser = new Cruiser();
-                        try {
-                            p.cruiser.addShip(p, shipType, cordX, cordY, orientation);
-                        } catch (OversizeException | OverlapTilesException | AdjacentTilesException e) {
-                            System.out.println(e.getMessage());
-                        } 
-                    }
-                    else throw new InvalidCountException("This ship type (" + shipType + ") was already inserted in the grid!");
-                }
-                if (shipType == 4){
-                    if (p.submarine == null) {
-                        p.submarine = new Submarine();
-                        try {
-                            p.submarine.addShip(p, shipType, cordX, cordY, orientation);
-                        } catch (OversizeException | OverlapTilesException | AdjacentTilesException e) {
-                            System.out.println(e.getMessage());
-                        } 
-                    }
-                    else throw new InvalidCountException("This ship type (" + shipType + ") was already inserted in the grid!");
-                }
-                if (shipType == 5){
-                    if (p.destroyer == null) {
-                        p.destroyer = new Destroyer();
-                        try {
-                            p.destroyer.addShip(p, shipType, cordX, cordY, orientation);
-                        } catch (OversizeException | OverlapTilesException | AdjacentTilesException e) {
-                            System.out.println(e.getMessage());
-                        }                
-                    }
-                    else throw new InvalidCountException("This ship type (" + shipType + ") was already inserted in the grid!");
-                }
-            } 
-        } 
-        catch(FileNotFoundException e){}
-        catch(IOException e) {}
-        finally {
+            reader = new BufferedReader(new FileReader(input));
+
             try {
-            if (reader != null) reader.close();
-            } catch (IOException e) {
-            e.printStackTrace();
-            }   
-        }
+            
+                while ((line = reader.readLine()) != null) {
+    
+                    shipType = Character.getNumericValue(line.charAt(0));
+                    cordX = Character.getNumericValue(line.charAt(2));
+                    cordY = Character.getNumericValue(line.charAt(4));
+                    orientation = Character.getNumericValue(line.charAt(6));
+        
+                    if (shipType == 1){
+                        if (p.carrier == null) {
+                            p.carrier = new Carrier();
+                            try {
+                                p.carrier.addShip(p, shipType, cordX, cordY, orientation);
+                            } catch (OversizeException | OverlapTilesException | AdjacentTilesException e) {
+                                System.out.println(e.getMessage());
+                            }
+                        }
+                        else throw new InvalidCountException("This ship type (" + shipType + ") was already inserted in the grid!");
+                    }
 
+                    if (shipType == 2){
+                        if (p.battleship == null) {
+                            p.battleship = new Battleship();
+                            try {
+                                p.battleship.addShip(p, shipType, cordX, cordY, orientation);
+                            } catch (OversizeException | OverlapTilesException | AdjacentTilesException e) {
+                                System.out.println(e.getMessage());
+                            } 
+                        }
+                        else throw new InvalidCountException("This ship type (" + shipType + ") was already inserted in the grid!");
+                    }
+                    
+                    if (shipType == 3){
+                        if (p.cruiser == null) {
+                            p.cruiser = new Cruiser();
+                            try {
+                                p.cruiser.addShip(p, shipType, cordX, cordY, orientation);
+                            } catch (OversizeException | OverlapTilesException | AdjacentTilesException e) {
+                                System.out.println(e.getMessage());
+                            } 
+                        }
+                        else throw new InvalidCountException("This ship type (" + shipType + ") was already inserted in the grid!");
+                    }
+
+                    if (shipType == 4){
+                        if (p.submarine == null) {
+                            p.submarine = new Submarine();
+                            try {
+                                p.submarine.addShip(p, shipType, cordX, cordY, orientation);
+                            } catch (OversizeException | OverlapTilesException | AdjacentTilesException e) {
+                                System.out.println(e.getMessage());
+                            } 
+                        }
+                        else throw new InvalidCountException("This ship type (" + shipType + ") was already inserted in the grid!");
+                    }
+
+                    if (shipType == 5){
+                        if (p.destroyer == null) {
+                            p.destroyer = new Destroyer();
+                            try {
+                                p.destroyer.addShip(p, shipType, cordX, cordY, orientation);
+                            } catch (OversizeException | OverlapTilesException | AdjacentTilesException e) {
+                                System.out.println(e.getMessage());
+                            }                
+                        }
+                        else throw new InvalidCountException("This ship type (" + shipType + ") was already inserted in the grid!");
+                    }
+                }
+
+            } finally {
+                if (reader != null) reader.close();
+            }
+
+        } catch (FileNotFoundException e) {
+            throw new NecessaryFileException("NecessaryFileException: necessary file (" + input + ") was not present." );
+        }
     }
 }
 
