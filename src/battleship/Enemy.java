@@ -13,6 +13,8 @@ public class Enemy extends Player {
         super(name);
     }
 
+    // bot's "logic" if player chooses to play against easy
+    // bot is doing random shots without any logic
     public void moveEasy(Player p, Enemy e) {
 
         final int MAX = 10;
@@ -27,6 +29,12 @@ public class Enemy extends Player {
 
     }
 
+    // bot's logic if player chooses to play against medium bot is doing random shots, 
+    // until it finds a part of a ship when bot finds a part of a ship, collects all valid 
+    // adjacent tiles around the tile that player's ship was shot. On every other round bot 
+    // gets one of those adjacent tiles, until it finds the second part of the ship. When the 
+    // second part of the ship is found, then bot will know the orientation of that ship and 
+    // will only shoot at that direction until player's ship is sank. When is sank bot will restart this logic.
     public void moveMedium(Player p, Enemy e) {
 
         final int MAX = 10;
@@ -88,6 +96,12 @@ public class Enemy extends Player {
 
     }
 
+    // bot's logic if the player chooses to play against hard. Bot has a fail limit 
+    // that is defined by the programmer at first bot starts shooting randomly. If it 
+    // finds a part of a ship then bot follows the same tactic as moveMedium. What is 
+    // changed from moveMedium is that when bot reaches that fail limit, it cheats and 
+    // finds a random tile that has a part of a ship of the player that is not shot, 
+    // and uses it for the next shot.
     public void moveHard(Player p, Enemy e) {
 
         final int MAX = 10;
@@ -209,6 +223,8 @@ public class Enemy extends Player {
         }
     }
 
+    // bot's logic when player chooses to play against impossible. Now bot cheats :D
+    // the only way to win is to guess without doing any mistakes and playing first :D
     public void moveImpossible(Player p, Player e) {
 
         Random randIndex;
@@ -230,6 +246,8 @@ public class Enemy extends Player {
 
     }
 
+    // method that finds next valid shoot. This method is used for moveMedium/moveHard in order to find the adjacent
+    // tiles that might contain an other part of a ship.
     private ArrayList<Triplet<Integer, Integer, Integer>> nextValidShoot(Integer x, Integer y, Integer orientation) {
         int cordX, cordY;
      

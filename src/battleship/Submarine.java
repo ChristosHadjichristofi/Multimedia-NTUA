@@ -1,5 +1,6 @@
 package src.battleship;
 
+// class for submarine which calls constructor of ship with the right values
 public class Submarine extends Ship {
     
     public Submarine() {

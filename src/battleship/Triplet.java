@@ -1,5 +1,8 @@
 package src.battleship;
 
+// triplet class in order to create objects that hold 3 values.
+// this class was used to create objects to hold the information for shooting coordinates
+// in order to make the bot(pc) to shoot with some logic (without cheating)
 public class Triplet<T1, T2, T3> {
 
     private final T1 x;

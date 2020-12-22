@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class Main {
     
+    // create player and enemy
     static Player player = new Player("player");
     static Enemy enemy = new Enemy("enemy");
 
@@ -17,6 +18,16 @@ public class Main {
 
         String pathPlayer = "medialab/player_default.txt";
         String pathEnemy = "medialab/enemy_default.txt";
+        
+        deployShips(pathPlayer, pathEnemy);
+        playGame();
+        gameEnded();
+        
+    }
+
+    // method that deploys the ships of both player and enemy. uses the readInput method to complete this task
+    private static void deployShips(String pathPlayer, String pathEnemy)
+            throws IOException, OversizeException, OverlapTilesException, AdjacentTilesException {
         
         try {
             readInput(player, pathPlayer);
@@ -32,13 +43,10 @@ public class Main {
             System.exit(-1);
         }
 
-        playGame();
+	}
 
-        gameEnded();
-        
-    }
-
-    private static void gameEnded() {
+    // method to show who won and the points
+	private static void gameEnded() {
 
         if (player.intactShips == 0) {
             System.out.println("You lost. All of your ships have been destroyed!");
@@ -56,6 +64,8 @@ public class Main {
 
     }
 
+    // driver method for the game. Player chooses difficulty, then randomly choose which one 
+    // plays first and start the game.
     private static void playGame() {
 
         Scanner scanner = new Scanner(System.in);
@@ -126,6 +136,7 @@ public class Main {
         return (Math.random() < 0.5) ? true : false;
     }
 
+    // method that completes the reading and deployment of ships
     public static void readInput(Player p, String path) throws IOException, InvalidCountException, OversizeException,
             OverlapTilesException, AdjacentTilesException, NecessaryFileException {
         

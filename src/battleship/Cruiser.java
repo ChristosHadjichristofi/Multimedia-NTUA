@@ -1,5 +1,6 @@
 package src.battleship;
 
+// class for cruiser which calls constructor of ship with the right values
 public class Cruiser extends Ship {
     
     public Cruiser() {
