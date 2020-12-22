@@ -15,6 +15,7 @@ public class Player {
     int intactShips;
     int points;
     int successLastShot;
+    int failLastShot;
 
     public Player(String name){
         
@@ -34,6 +35,7 @@ public class Player {
               if (p.name == "player") System.out.println("Your shot went in the sea!");
               if (p.name == "enemy") System.out.println("Enemy's shot went in the sea!");
               e.grid.grid[x][y] = 7;
+              failLastShot++;
               return true;
             
             case 1:

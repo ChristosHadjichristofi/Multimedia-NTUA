@@ -62,6 +62,14 @@ public class Main {
         Pair<Integer, Integer> shootCoords;
         Boolean move = false;
         int x, y;
+        String difficulty;
+
+        do {
+
+            System.out.println("Select valid difficulty(Easy, Medium, Hard, Impossible):");
+            difficulty = scanner.nextLine();
+
+        } while (!difficulty.equals("Easy") && !difficulty.equals("Medium") && !difficulty.equals("Hard") && !difficulty.equals("Impossible"));
 
         move = coinFlip();
         if (move) System.out.println("You're doing the first move!");
@@ -89,7 +97,21 @@ public class Main {
                 player.grid.printGrids(player, enemy);
             }
             else {
-                enemy.move(player, enemy);
+                switch(difficulty) {
+                    case "Medium":
+                      enemy.moveMedium(player, enemy);
+                      break;
+                    case "Hard":
+                      enemy.moveHard(player, enemy);
+                      break;
+                    case "Impossible":
+                      enemy.moveImpossible(player, enemy);
+                      break;
+                    default:
+                      enemy.moveEasy(player, enemy);
+                      break;
+                  }
+                
                 move = true;
                 enemy.availableShoots--;
                 System.out.println("");

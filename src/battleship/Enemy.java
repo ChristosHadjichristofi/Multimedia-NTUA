@@ -6,19 +6,35 @@ import java.util.Random;
 public class Enemy extends Player {
 
     ArrayList<Triplet<Integer, Integer, Integer>> nextShots;
+    boolean foundShip = false;
+    protected int failLimit = 3;
 
     public Enemy(String name) {
         super(name);
     }
 
-    public void move(Player p, Enemy e) {
+    public void moveEasy(Player p, Enemy e) {
+
+        final int MAX = 10;
+        final int MIN = 0;
+        Random x, y;
+        Pair<Integer, Integer> shootCoords;
+        do {
+            x = new Random();
+            y = new Random();
+            shootCoords = new Pair<Integer, Integer>(x.nextInt(MAX - MIN) + MIN, y.nextInt(MAX - MIN) + MIN);
+        } while (!e.shoot(e, p, shootCoords.getX(), shootCoords.getY()));
+
+    }
+
+    public void moveMedium(Player p, Enemy e) {
 
         final int MAX = 10;
         final int MIN = 0;
         Random x, y;
         Triplet<Integer, Integer, Integer> shootCoords;
 
-        if (availableShoots == 40 || successLastShot == 0) {
+        if (availableShoots == 40 || e.successLastShot == 0) {
 
             do {
                 x = new Random();
@@ -26,18 +42,18 @@ public class Enemy extends Player {
                 shootCoords = new Triplet<Integer, Integer, Integer>(x.nextInt(MAX - MIN) + MIN, y.nextInt(MAX - MIN) + MIN, 0);
             } while (!e.shoot(e, p, shootCoords.getX(), shootCoords.getY()));
             
-            if (successLastShot > 0) 
+            if (e.successLastShot > 0) 
                 e.nextShots = nextValidShoot(shootCoords.getX(), shootCoords.getY(), shootCoords.getOrientation());
 
         }
 
-        else if (successLastShot == 1){
+        else if (e.successLastShot == 1){
             
             shootCoords = e.nextShots.remove(0);
             while (!e.shoot(e, p, shootCoords.getX(), shootCoords.getY())){
 
                 if (e.nextShots.size() == 0){
-                    successLastShot = 0;
+                    e.successLastShot = 0;
                     break;
                 }
 
@@ -45,18 +61,18 @@ public class Enemy extends Player {
 
             }
 
-            if (successLastShot > 1)
+            if (e.successLastShot > 1)
                 e.nextShots = nextValidShoot(shootCoords.getX(), shootCoords.getY(), shootCoords.getOrientation());
         }
 
         else {
-            int tempSuccessShots = successLastShot;
+            int tempSuccessShots = e.successLastShot;
 
             shootCoords = e.nextShots.remove(0);
             while (!e.shoot(e, p, shootCoords.getX(), shootCoords.getY())){
 
                 if (e.nextShots.size() == 0){
-                    successLastShot = 0;
+                    e.successLastShot = 0;
                     break;
                 }
 
@@ -69,6 +85,148 @@ public class Enemy extends Player {
             else
                 successLastShot = 0;    
         }
+
+    }
+
+    public void moveHard(Player p, Enemy e) {
+
+        final int MAX = 10;
+        final int MIN = 0;
+        Random x, y, randIndex;
+        Pair<Integer, Integer> randElem;
+        Triplet<Integer, Integer, Integer> shootCoords;
+
+        // if not found a ship already
+        if (!e.foundShip) {
+            
+            // if pc didn't reach random shoot limit without finding a ship
+            if (e.failLastShot <= failLimit) {
+                
+                // find a random x,y that is valid and pc didn't shoot there
+                do {
+                    x = new Random();
+                    y = new Random();
+                    shootCoords = new Triplet<Integer, Integer, Integer>(x.nextInt(MAX - MIN) + MIN, y.nextInt(MAX - MIN) + MIN, 0);
+                } while (!e.shoot(e, p, shootCoords.getX(), shootCoords.getY()));
+
+                // if pc randomly found a ship, get all adjacent tiles that are valid to be next target
+                // set found ship variable to true
+                if (e.successLastShot > 0) {
+                    e.nextShots = nextValidShoot(shootCoords.getX(), shootCoords.getY(), shootCoords.getOrientation());
+                    e.foundShip = true;
+                }
+                
+            }
+            
+            // if exceeded the random shoot limit without finding a ship
+            else {
+
+                ArrayList<Pair<Integer, Integer>> targets = new ArrayList<Pair<Integer, Integer>>();
+
+                // get all ships that are still intact (their parts that are not shot yet) and place them in a new arraylist
+                targets.addAll(p.carrier.positions);
+                targets.addAll(p.cruiser.positions);
+                targets.addAll(p.submarine.positions);
+                targets.addAll(p.destroyer.positions);
+                targets.addAll(p.battleship.positions);
+
+                // randomly get one target
+                randIndex = new Random();
+                randElem = targets.get(randIndex.nextInt(targets.size()));
+
+                // prepare shoot coords and set orientation to unkown (which is 0) and excecute the shoot
+                shootCoords = new Triplet<Integer, Integer, Integer>(randElem.getX(), randElem.getY(), 0);
+                shoot(e, p, shootCoords.getX(), shootCoords.getY());
+
+                // get valid adjacent tiles to shoot next
+                e.nextShots = nextValidShoot(shootCoords.getX(), shootCoords.getY(), shootCoords.getOrientation());
+
+                // reduce failLimit so it becomes harder with time, make failLastShot eq to 0 and set foundShip to true
+                failLimit--;
+                e.failLastShot = 0;
+                e.foundShip = true;
+
+            }
+        }
+        // ship is found
+        else {
+
+            // in case pc found only one piece of ship
+            if (e.successLastShot == 1){
+                
+                // get the first of valid adjacent tiles and complete the shot
+                shootCoords = e.nextShots.remove(0);
+                while (!e.shoot(e, p, shootCoords.getX(), shootCoords.getY())){
+    
+                    if (e.nextShots.size() == 0){
+                        e.successLastShot = 0;
+                        failLastShot = 0;
+                        foundShip = false;
+                        break;
+                    }
+    
+                    shootCoords = e.nextShots.remove(0);
+    
+                }
+                
+                // after the shot, if it was successful then get the tiles that are valid. This time will only get the 
+                // right orientation of the ship, and so it will only succeed on next shot (unless ship doesn't have an other piece)
+                if (e.successLastShot > 1)
+                    e.nextShots = nextValidShoot(shootCoords.getX(), shootCoords.getY(), shootCoords.getOrientation());
+            }
+
+            // if more than one pieces of the ship found
+            else {
+                
+                // keep the number of success shots till now
+                int tempSuccessShots = e.successLastShot;
+                
+                // execute the shot
+                shootCoords = e.nextShots.remove(0);
+                while (!e.shoot(e, p, shootCoords.getX(), shootCoords.getY())){
+    
+                    if (e.nextShots.size() == 0){
+                        e.successLastShot = 0;
+                        failLastShot = 0;
+                        foundShip = false;
+                        break;
+                    }
+    
+                    shootCoords = e.nextShots.remove(0);
+    
+                }
+                
+                // if this shot was successful too prepare for the next 
+                if (successLastShot > tempSuccessShots) 
+                    e.nextShots = nextValidShoot(shootCoords.getX(), shootCoords.getY(), shootCoords.getOrientation());
+                // else it means that the ship is down.
+                else {
+                    successLastShot = 0;    
+                    failLastShot = 0;
+                    foundShip = false;
+                }
+            }
+        }
+    }
+
+    public void moveImpossible(Player p, Player e) {
+
+        Random randIndex;
+        Pair<Integer, Integer> randElem;
+        Triplet<Integer, Integer, Integer> shootCoords;
+        ArrayList<Pair<Integer, Integer>> targets = new ArrayList<Pair<Integer, Integer>>();
+
+        targets.addAll(p.carrier.positions);
+        targets.addAll(p.cruiser.positions);
+        targets.addAll(p.submarine.positions);
+        targets.addAll(p.destroyer.positions);
+        targets.addAll(p.battleship.positions);
+
+        randIndex = new Random();
+        randElem = targets.get(randIndex.nextInt(targets.size()));
+
+        shootCoords = new Triplet<Integer, Integer, Integer>(randElem.getX(), randElem.getY(), 0);
+        shoot(e, p, shootCoords.getX(), shootCoords.getY());
 
     }
 
