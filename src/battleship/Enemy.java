@@ -157,6 +157,7 @@ public class Enemy extends Player {
 
                 // reduce failLimit so it becomes harder with time, make failLastShot eq to 0 and set foundShip to true
                 failLimit--;
+                e.successLastShot = 1;
                 e.failLastShot = 0;
                 e.foundShip = true;
 
