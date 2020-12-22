@@ -65,8 +65,8 @@ public class Main {
         String difficulty;
 
         do {
-
-            System.out.println("Select valid difficulty(Easy, Medium, Hard, Impossible):");
+            
+            System.out.print("Select valid difficulty(Easy, Medium, Hard, Impossible): ");
             difficulty = scanner.nextLine();
 
         } while (!difficulty.equals("Easy") && !difficulty.equals("Medium") && !difficulty.equals("Hard") && !difficulty.equals("Impossible"));
@@ -80,11 +80,11 @@ public class Main {
             if (move) {
                 
                 do {
-                    System.out.println("Please enter (x,y) coordinates to shoot: ");
+                    System.out.print("Please enter (x,y) coordinates to shoot: ");
                     x = scanner.nextInt();
                     y = scanner.nextInt();
                     while(x < 0 || x >= 10 || y < 0 || y >= 10){
-                        System.out.println("Please give valid (x,y) coordinates: ");
+                        System.out.print("Please give valid (x,y) coordinates: ");
                         x = scanner.nextInt();
                         y = scanner.nextInt();
                     }
@@ -114,8 +114,6 @@ public class Main {
                 
                 move = true;
                 enemy.availableShoots--;
-                System.out.println("");
-                player.grid.printGrids(enemy, player);
             }
         }
 
