@@ -42,7 +42,7 @@ public class Enemy extends Player {
         Random x, y;
         Triplet<Integer, Integer, Integer> shootCoords;
 
-        if (availableShoots == 40 || e.successLastShot == 0) {
+        if (e.availableShoots == 40 || e.successLastShot == 0) {
 
             do {
                 x = new Random();
@@ -50,12 +50,12 @@ public class Enemy extends Player {
                 shootCoords = new Triplet<Integer, Integer, Integer>(x.nextInt(MAX - MIN) + MIN, y.nextInt(MAX - MIN) + MIN, 0);
             } while (!e.shoot(e, p, shootCoords.getX(), shootCoords.getY()));
             
-            if (e.successLastShot > 0) 
+            if (e.successLastShot > 0)
                 e.nextShots = nextValidShoot(shootCoords.getX(), shootCoords.getY(), shootCoords.getOrientation());
 
         }
 
-        else if (e.successLastShot == 1){
+        else if (e.successLastShot == 1 && e.nextShots.size() > 0) {
             
             shootCoords = e.nextShots.remove(0);
             while (!e.shoot(e, p, shootCoords.getX(), shootCoords.getY())){
@@ -69,11 +69,26 @@ public class Enemy extends Player {
 
             }
 
-            if (e.successLastShot > 1)
+            if (e.successLastShot > 1) {
+                ArrayList<Triplet<Integer, Integer, Integer>> previousShots = e.nextShots;
+                
                 e.nextShots = nextValidShoot(shootCoords.getX(), shootCoords.getY(), shootCoords.getOrientation());
+
+                for (Triplet<Integer, Integer, Integer> prevShot : previousShots) {
+                    if (prevShot.getX() == shootCoords.getX() || prevShot.getY() == shootCoords.getY()){
+                        e.nextShots.add(prevShot);
+                        break;
+                    }
+                }
+
+                for (Triplet<Integer, Integer, Integer> i : e.nextShots) {
+                    System.out.print( "(" + i.getX() + ", " + i.getY() +") ");
+                }
+
+            }
         }
 
-        else {
+        else if (e.successLastShot > 1 && e.nextShots.size() > 0) {
             int tempSuccessShots = e.successLastShot;
 
             shootCoords = e.nextShots.remove(0);
@@ -88,10 +103,35 @@ public class Enemy extends Player {
 
             }
 
-            if (successLastShot > tempSuccessShots) 
+            if (successLastShot > tempSuccessShots) {
+
+                ArrayList<Triplet<Integer, Integer, Integer>> previousShots = e.nextShots;
                 e.nextShots = nextValidShoot(shootCoords.getX(), shootCoords.getY(), shootCoords.getOrientation());
+                for (Triplet<Integer, Integer, Integer> prevShot : previousShots)
+                    e.nextShots.add(prevShot);
+                
+                for (Triplet<Integer, Integer, Integer> i : e.nextShots) {
+                    System.out.print( "(" + i.getX() + ", " + i.getY() +") ");
+                }
+
+            }
             else
-                successLastShot = 0;    
+                e.successLastShot = 0;
+        }
+        // means pc shot a ship on last play but had no valid adjacent tiles, so 
+        // it needs to attack randomly
+        else {
+            
+            e.successLastShot = 0;
+
+            do {
+                x = new Random();
+                y = new Random();
+                shootCoords = new Triplet<Integer, Integer, Integer>(x.nextInt(MAX - MIN) + MIN, y.nextInt(MAX - MIN) + MIN, 0);
+            } while (!e.shoot(e, p, shootCoords.getX(), shootCoords.getY()));
+            
+            if (e.successLastShot > 0)
+                e.nextShots = nextValidShoot(shootCoords.getX(), shootCoords.getY(), shootCoords.getOrientation());
         }
 
     }
@@ -114,7 +154,7 @@ public class Enemy extends Player {
         if (!e.foundShip) {
             
             // if pc didn't reach random shoot limit without finding a ship
-            if (e.failLastShot <= failLimit) {
+            if (e.failLastShot <= e.failLimit) {
                 
                 // find a random x,y that is valid and pc didn't shoot there
                 do {
@@ -156,7 +196,7 @@ public class Enemy extends Player {
                 e.nextShots = nextValidShoot(shootCoords.getX(), shootCoords.getY(), shootCoords.getOrientation());
 
                 // reduce failLimit so it becomes harder with time, make failLastShot eq to 0 and set foundShip to true
-                failLimit--;
+                e.failLimit--;
                 e.successLastShot = 1;
                 e.failLastShot = 0;
                 e.foundShip = true;
@@ -167,7 +207,7 @@ public class Enemy extends Player {
         else {
 
             // in case pc found only one piece of ship
-            if (e.successLastShot == 1){
+            if (e.successLastShot == 1 && e.nextShots.size() > 0){
                 
                 // get the first of valid adjacent tiles and complete the shot
                 shootCoords = e.nextShots.remove(0);
@@ -175,8 +215,8 @@ public class Enemy extends Player {
     
                     if (e.nextShots.size() == 0){
                         e.successLastShot = 0;
-                        failLastShot = 0;
-                        foundShip = false;
+                        e.failLastShot = 0;
+                        e.foundShip = false;
                         break;
                     }
     
@@ -186,12 +226,26 @@ public class Enemy extends Player {
                 
                 // after the shot, if it was successful then get the tiles that are valid. This time will only get the 
                 // right orientation of the ship, and so it will only succeed on next shot (unless ship doesn't have an other piece)
-                if (e.successLastShot > 1)
+                if (e.successLastShot > 1){
+                    ArrayList<Triplet<Integer, Integer, Integer>> previousShots = e.nextShots;
+                    
                     e.nextShots = nextValidShoot(shootCoords.getX(), shootCoords.getY(), shootCoords.getOrientation());
+                    
+                    for (Triplet<Integer, Integer, Integer> prevShot : previousShots) {
+                        if (prevShot.getX() == shootCoords.getX() || prevShot.getY() == shootCoords.getY()){
+                            e.nextShots.add(prevShot);
+                            break;
+                        }
+                    }
+
+                    for (Triplet<Integer, Integer, Integer> i : e.nextShots) {
+                        System.out.print( "(" + i.getX() + ", " + i.getY() +") ");
+                    }
+                }
             }
 
             // if more than one pieces of the ship found
-            else {
+            else if (e.successLastShot > 1 && e.nextShots.size() > 0){
                 
                 // keep the number of success shots till now
                 int tempSuccessShots = e.successLastShot;
@@ -202,8 +256,8 @@ public class Enemy extends Player {
     
                     if (e.nextShots.size() == 0){
                         e.successLastShot = 0;
-                        failLastShot = 0;
-                        foundShip = false;
+                        e.failLastShot = 0;
+                        e.foundShip = false;
                         break;
                     }
     
@@ -212,13 +266,45 @@ public class Enemy extends Player {
                 }
                 
                 // if this shot was successful too prepare for the next 
-                if (successLastShot > tempSuccessShots) 
+                if (e.successLastShot > tempSuccessShots) {
+                    ArrayList<Triplet<Integer, Integer, Integer>> previousShots = e.nextShots;
+                    
                     e.nextShots = nextValidShoot(shootCoords.getX(), shootCoords.getY(), shootCoords.getOrientation());
+                    
+                    for (Triplet<Integer, Integer, Integer> prevShot : previousShots)
+                        e.nextShots.add(prevShot);
+                    
+                    for (Triplet<Integer, Integer, Integer> i : e.nextShots) {
+                        System.out.print( "(" + i.getX() + ", " + i.getY() +") ");
+                    }
+                }
                 // else it means that the ship is down.
                 else {
-                    successLastShot = 0;    
-                    failLastShot = 0;
-                    foundShip = false;
+                    e.successLastShot = 0;
+                    e.failLastShot = 0;
+                    e.foundShip = false;
+                }
+            }
+            // else it means that bot previous round's shot was successful but had no valid adjacent tiles
+            // so it needs to randomly shot
+            else {
+
+                e.successLastShot = 0;    
+                e.failLastShot = 0;
+                e.failLimit--;
+                e.foundShip = false;
+
+                do {
+                    x = new Random();
+                    y = new Random();
+                    shootCoords = new Triplet<Integer, Integer, Integer>(x.nextInt(MAX - MIN) + MIN, y.nextInt(MAX - MIN) + MIN, 0);
+                } while (!e.shoot(e, p, shootCoords.getX(), shootCoords.getY()));
+
+                // if pc randomly found a ship, get all adjacent tiles that are valid to be next target
+                // set found ship variable to true
+                if (e.successLastShot > 0) {
+                    e.nextShots = nextValidShoot(shootCoords.getX(), shootCoords.getY(), shootCoords.getOrientation());
+                    e.foundShip = true;
                 }
             }
         }
@@ -273,6 +359,4 @@ public class Enemy extends Player {
 
         return shots;
     }
-
-    
 }
