@@ -17,15 +17,7 @@ public class Enemy extends Player {
     // bot is doing random shots without any logic
     public void moveEasy(Player p, Enemy e) {
 
-        final int MAX = 10;
-        final int MIN = 0;
-        Random x, y;
-        Pair<Integer, Integer> shootCoords;
-        do {
-            x = new Random();
-            y = new Random();
-            shootCoords = new Pair<Integer, Integer>(x.nextInt(MAX - MIN) + MIN, y.nextInt(MAX - MIN) + MIN);
-        } while (!e.shoot(e, p, shootCoords.getX(), shootCoords.getY()));
+        randomShot(p,e);
 
     }
 
@@ -37,18 +29,11 @@ public class Enemy extends Player {
     // will only shoot at that direction until player's ship is sank. When is sank bot will restart this logic.
     public void moveMedium(Player p, Enemy e) {
 
-        final int MAX = 10;
-        final int MIN = 0;
-        Random x, y;
         Triplet<Integer, Integer, Integer> shootCoords;
 
         if (e.availableShoots == 40 || e.successLastShot == 0) {
 
-            do {
-                x = new Random();
-                y = new Random();
-                shootCoords = new Triplet<Integer, Integer, Integer>(x.nextInt(MAX - MIN) + MIN, y.nextInt(MAX - MIN) + MIN, 0);
-            } while (!e.shoot(e, p, shootCoords.getX(), shootCoords.getY()));
+            shootCoords = randomShot(p, e);
             
             if (e.successLastShot > 0)
                 e.nextShots = nextValidShoot(shootCoords.getX(), shootCoords.getY(), shootCoords.getOrientation());
@@ -81,10 +66,6 @@ public class Enemy extends Player {
                     }
                 }
 
-                for (Triplet<Integer, Integer, Integer> i : e.nextShots) {
-                    System.out.print( "(" + i.getX() + ", " + i.getY() +") ");
-                }
-
             }
         }
 
@@ -109,14 +90,8 @@ public class Enemy extends Player {
                 e.nextShots = nextValidShoot(shootCoords.getX(), shootCoords.getY(), shootCoords.getOrientation());
                 for (Triplet<Integer, Integer, Integer> prevShot : previousShots)
                     e.nextShots.add(prevShot);
-                
-                for (Triplet<Integer, Integer, Integer> i : e.nextShots) {
-                    System.out.print( "(" + i.getX() + ", " + i.getY() +") ");
-                }
 
             }
-            else
-                e.successLastShot = 0;
         }
         // means pc shot a ship on last play but had no valid adjacent tiles, so 
         // it needs to attack randomly
@@ -124,11 +99,7 @@ public class Enemy extends Player {
             
             e.successLastShot = 0;
 
-            do {
-                x = new Random();
-                y = new Random();
-                shootCoords = new Triplet<Integer, Integer, Integer>(x.nextInt(MAX - MIN) + MIN, y.nextInt(MAX - MIN) + MIN, 0);
-            } while (!e.shoot(e, p, shootCoords.getX(), shootCoords.getY()));
+            shootCoords = randomShot(p, e);
             
             if (e.successLastShot > 0)
                 e.nextShots = nextValidShoot(shootCoords.getX(), shootCoords.getY(), shootCoords.getOrientation());
@@ -136,7 +107,7 @@ public class Enemy extends Player {
 
     }
 
-    // bot's logic if the player chooses to play against hard. Bot has a fail limit 
+    // bot's logic if the player chooses to play against hard. Bot has a fail limit
     // that is defined by the programmer at first bot starts shooting randomly. If it 
     // finds a part of a ship then bot follows the same tactic as moveMedium. What is 
     // changed from moveMedium is that when bot reaches that fail limit, it cheats and 
@@ -144,9 +115,7 @@ public class Enemy extends Player {
     // and uses it for the next shot.
     public void moveHard(Player p, Enemy e) {
 
-        final int MAX = 10;
-        final int MIN = 0;
-        Random x, y, randIndex;
+        Random randIndex;
         Pair<Integer, Integer> randElem;
         Triplet<Integer, Integer, Integer> shootCoords;
 
@@ -157,11 +126,7 @@ public class Enemy extends Player {
             if (e.failLastShot <= e.failLimit) {
                 
                 // find a random x,y that is valid and pc didn't shoot there
-                do {
-                    x = new Random();
-                    y = new Random();
-                    shootCoords = new Triplet<Integer, Integer, Integer>(x.nextInt(MAX - MIN) + MIN, y.nextInt(MAX - MIN) + MIN, 0);
-                } while (!e.shoot(e, p, shootCoords.getX(), shootCoords.getY()));
+                shootCoords = randomShot(p, e);
 
                 // if pc randomly found a ship, get all adjacent tiles that are valid to be next target
                 // set found ship variable to true
@@ -238,9 +203,6 @@ public class Enemy extends Player {
                         }
                     }
 
-                    for (Triplet<Integer, Integer, Integer> i : e.nextShots) {
-                        System.out.print( "(" + i.getX() + ", " + i.getY() +") ");
-                    }
                 }
             }
 
@@ -274,15 +236,7 @@ public class Enemy extends Player {
                     for (Triplet<Integer, Integer, Integer> prevShot : previousShots)
                         e.nextShots.add(prevShot);
                     
-                    for (Triplet<Integer, Integer, Integer> i : e.nextShots) {
-                        System.out.print( "(" + i.getX() + ", " + i.getY() +") ");
-                    }
-                }
-                // else it means that the ship is down.
-                else {
-                    e.successLastShot = 0;
-                    e.failLastShot = 0;
-                    e.foundShip = false;
+                    
                 }
             }
             // else it means that bot previous round's shot was successful but had no valid adjacent tiles
@@ -294,11 +248,7 @@ public class Enemy extends Player {
                 e.failLimit--;
                 e.foundShip = false;
 
-                do {
-                    x = new Random();
-                    y = new Random();
-                    shootCoords = new Triplet<Integer, Integer, Integer>(x.nextInt(MAX - MIN) + MIN, y.nextInt(MAX - MIN) + MIN, 0);
-                } while (!e.shoot(e, p, shootCoords.getX(), shootCoords.getY()));
+                shootCoords = randomShot(p, e);
 
                 // if pc randomly found a ship, get all adjacent tiles that are valid to be next target
                 // set found ship variable to true
@@ -359,4 +309,28 @@ public class Enemy extends Player {
 
         return shots;
     }
+
+    private Triplet<Integer, Integer, Integer> randomShot(Player p, Enemy e) {
+        
+        final int MAX = 10;
+        final int MIN = 0;
+        Random x, y;
+        Triplet<Integer, Integer, Integer> shootCoords;
+
+        do {
+            x = new Random();
+            y = new Random();
+            shootCoords = new Triplet<Integer, Integer, Integer>(x.nextInt(MAX - MIN) + MIN, y.nextInt(MAX - MIN) + MIN, 0);
+        } while (!e.shoot(e, p, shootCoords.getX(), shootCoords.getY()));
+
+        return shootCoords;
+    }
+
+    private void printBotNextShots() {
+
+        for (Triplet<Integer, Integer, Integer> i : nextShots) {
+            System.out.print( "(" + i.getX() + ", " + i.getY() +") ");
+        }
+    }
+
 }
