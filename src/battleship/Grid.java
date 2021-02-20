@@ -1,4 +1,4 @@
-package src.battleship;
+package battleship;
 
 /*
     For the grids, there is a list that shows which number represents what:

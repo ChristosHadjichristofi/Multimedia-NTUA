@@ -1,4 +1,4 @@
-package src.battleship;
+package battleship;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -15,9 +15,9 @@ public class Enemy extends Player {
 
     // bot's "logic" if player chooses to play against easy
     // bot is doing random shots without any logic
-    public void moveEasy(Player p, Enemy e) {
+    public Triplet<Integer, Integer, Integer> moveEasy(Player p, Enemy e) {
 
-        randomShot(p,e);
+        return randomShot(p,e);
 
     }
 
@@ -27,7 +27,7 @@ public class Enemy extends Player {
     // gets one of those adjacent tiles, until it finds the second part of the ship. When the 
     // second part of the ship is found, then bot will know the orientation of that ship and 
     // will only shoot at that direction until player's ship is sank. When is sank bot will restart this logic.
-    public void moveMedium(Player p, Enemy e) {
+    public Triplet<Integer, Integer, Integer> moveMedium(Player p, Enemy e) {
 
         Triplet<Integer, Integer, Integer> shootCoords;
 
@@ -104,7 +104,7 @@ public class Enemy extends Player {
             if (e.successLastShot > 0)
                 e.nextShots = nextValidShoot(shootCoords.getX(), shootCoords.getY(), shootCoords.getOrientation());
         }
-
+        return shootCoords;
     }
 
     // bot's logic if the player chooses to play against hard. Bot has a fail limit
@@ -113,7 +113,7 @@ public class Enemy extends Player {
     // changed from moveMedium is that when bot reaches that fail limit, it cheats and 
     // finds a random tile that has a part of a ship of the player that is not shot, 
     // and uses it for the next shot.
-    public void moveHard(Player p, Enemy e) {
+    public Triplet<Integer, Integer, Integer> moveHard(Player p, Enemy e) {
 
         Random randIndex;
         Pair<Integer, Integer> randElem;
@@ -258,11 +258,12 @@ public class Enemy extends Player {
                 }
             }
         }
+        return shootCoords;
     }
 
     // bot's logic when player chooses to play against impossible. Now bot cheats :D
     // the only way to win is to guess without doing any mistakes and playing first :D
-    public void moveImpossible(Player p, Player e) {
+    public Triplet<Integer, Integer, Integer> moveImpossible(Player p, Player e) {
 
         Random randIndex;
         Pair<Integer, Integer> randElem;
@@ -280,6 +281,8 @@ public class Enemy extends Player {
 
         shootCoords = new Triplet<Integer, Integer, Integer>(randElem.getX(), randElem.getY(), 0);
         shoot(e, p, shootCoords.getX(), shootCoords.getY());
+
+        return shootCoords;
 
     }
 
@@ -324,6 +327,23 @@ public class Enemy extends Player {
         } while (!e.shoot(e, p, shootCoords.getX(), shootCoords.getY()));
 
         return shootCoords;
+    }
+
+    public Pair<Integer,Integer> help(Enemy e) {
+        Random randomGenerator = new Random();
+        ArrayList<Pair<Integer, Integer>> allAvailableEnemyShips = new ArrayList<>();
+        Pair<Integer, Integer> coords;
+
+        allAvailableEnemyShips.addAll(e.battleship.positions);
+        allAvailableEnemyShips.addAll(e.carrier.positions);
+        allAvailableEnemyShips.addAll(e.cruiser.positions);
+        allAvailableEnemyShips.addAll(e.submarine.positions);
+        allAvailableEnemyShips.addAll(e.destroyer.positions);
+
+        int index = randomGenerator.nextInt(allAvailableEnemyShips.size());
+        coords = allAvailableEnemyShips.get(index);
+
+        return coords;
     }
 
     private void printBotNextShots() {

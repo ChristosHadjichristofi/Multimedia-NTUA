@@ -1,4 +1,4 @@
-package src.battleship;
+package battleship;
 
 // this exception is thrown when an input file is missing
 public class NecessaryFileException extends Exception {

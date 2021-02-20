@@ -1,4 +1,4 @@
-package src.battleship;
+package battleship;
 
 // triplet class in order to create objects that hold 3 values.
 // this class was used to create objects to hold the information for shooting coordinates

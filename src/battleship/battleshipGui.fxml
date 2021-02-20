@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
+  All rights reserved. Use is subject to license terms.
+
+  This file is available and licensed under the following license:
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the distribution.
+  - Neither the name of Oracle Corporation nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="battleship.Main">
+  <children>
+    <MenuBar VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="Application">
+          <items>
+            <MenuItem fx:id="startOption" mnemonicParsing="false" onAction="#startAction" text="Start" />
+            <MenuItem fx:id="loadOption" mnemonicParsing="false" onAction="#loadAction" text="Load" />
+                  <Menu mnemonicParsing="false" text="Difficulty">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#easy" text="Easy" />
+                        <MenuItem mnemonicParsing="false" onAction="#medium" text="Medium" />
+                        <MenuItem mnemonicParsing="false" onAction="#hard" text="Hard" />
+                        <MenuItem mnemonicParsing="false" onAction="#impossible" text="Impossible" />
+                    </items>
+                  </Menu>
+                  <MenuItem fx:id="exitOption" mnemonicParsing="false" onAction="#exitAction" text="Exit" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Details">
+          <items>
+            <MenuItem fx:id="enemyShipsOption" mnemonicParsing="false" onAction="#enemyShipsAction" text="Enemy Ships" />
+            <MenuItem fx:id="playerShotsOption" mnemonicParsing="false" onAction="#playerShotsAction" text="Player Shots" />
+            <MenuItem fx:id="enemyShotsOption" mnemonicParsing="false" onAction="#enemyShotsAction" text="Enemy Shots" />
+          </items>
+        </Menu>
+            <Menu mnemonicParsing="false" text="Hint">
+               <items>
+                  <MenuItem fx:id="getHint" mnemonicParsing="false" onAction="#getHintAction" text="Get Hint" />
+                  <MenuItem fx:id="aboutHint" mnemonicParsing="false" onAction="#aboutHintAction" text="About Hint" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="About">
+               <items>
+                  <MenuItem fx:id="instructionsOption" mnemonicParsing="false" onAction="#instrAction" text="How to play" />
+               </items>
+            </Menu>
+      </menus>
+    </MenuBar>
+      <BorderPane prefHeight="788.0" prefWidth="1200.0">
+         <center>
+            <HBox prefHeight="395.0" prefWidth="1160.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Pane prefHeight="474.0" prefWidth="187.0" />
+                  <GridPane fx:id="gridPlayer" gridLinesVisible="true" layoutX="473.0" layoutY="10.0" prefHeight="474.0" prefWidth="340.0">
+                     <!-- <columnConstraints> -->
+                     <!-- </columnConstraints> -->
+                     <!-- <rowConstraints> -->
+                     <!-- </rowConstraints> -->
+                  </GridPane>
+                  <Separator orientation="VERTICAL" prefHeight="474.0" prefWidth="276.0" />
+                  <GridPane fx:id="gridEnemy" gridLinesVisible="true" layoutX="171.0" layoutY="10.0" prefHeight="474.0" prefWidth="340.0">
+                     <!-- <columnConstraints> -->
+                     <!-- </columnConstraints> -->
+                     <!-- <rowConstraints> -->
+                     <!-- </rowConstraints> -->
+                  </GridPane>
+                  <Pane layoutX="10.0" layoutY="10.0" prefHeight="474.0" prefWidth="187.0" />
+               </children>
+            </HBox>
+         </center>
+         <top>
+            <HBox prefHeight="169.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Pane prefHeight="100.0" prefWidth="223.0" />
+                  <Pane layoutX="38.0" layoutY="10.0" prefHeight="100.0" prefWidth="238.0">
+                     <children>
+                        <VBox layoutX="18.0" layoutY="-1.0" prefHeight="102.0" prefWidth="203.0">
+                           <children>
+                              <Label fx:id="playerLabel" prefHeight="27.0" prefWidth="202.0" text="          Player" textAlignment="CENTER">
+                                 <font>
+                                    <Font name="Arial" size="24.0" />
+                                 </font>
+                              </Label>
+                              <Separator prefHeight="21.0" prefWidth="202.0" />
+                              <TilePane prefHeight="200.0" prefWidth="200.0">
+                                 <children>
+                                    <Label fx:id="aliveShipsPlayer" prefHeight="22.0" prefWidth="211.0" />
+                                    <Label fx:id="availableShootsPlayer" layoutX="10.0" layoutY="10.0" prefHeight="22.0" prefWidth="211.0" />
+                                    <Label fx:id="pointsPlayer" layoutX="10.0" layoutY="32.0" prefHeight="22.0" prefWidth="211.0" />
+                                    <Label fx:id="successfulShotsRatePlayer" layoutX="10.0" layoutY="54.0" prefHeight="22.0" prefWidth="211.0" />
+                                 </children>
+                              </TilePane>
+                           </children>
+                        </VBox>
+                     </children>
+                  </Pane>
+                  <Pane layoutX="671.0" layoutY="10.0" prefHeight="100.0" prefWidth="321.0">
+                     <children>
+                        <Label fx:id="difficultyLabel" alignment="CENTER" layoutY="95.0" prefHeight="27.0" prefWidth="279.0" textAlignment="CENTER">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="playerScenario" alignment="CENTER" layoutX="1.0" layoutY="41.0" prefHeight="27.0" prefWidth="279.0" textAlignment="CENTER">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="enemyScenario" alignment="CENTER" layoutX="1.0" layoutY="68.0" prefHeight="27.0" prefWidth="279.0" textAlignment="CENTER">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="playerScenario1" alignment="CENTER" layoutX="1.0" layoutY="14.0" prefHeight="27.0" prefWidth="279.0" text="Scenarios" textAlignment="CENTER">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Separator layoutX="20.0" layoutY="41.0" prefHeight="2.0" prefWidth="239.0" />
+                        <Separator layoutX="21.0" layoutY="94.0" prefHeight="2.0" prefWidth="239.0" />
+                     </children></Pane>
+                  <Pane layoutX="38.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <VBox prefHeight="102.0" prefWidth="202.0">
+                           <children>
+                              <Label fx:id="enemyLabel" prefHeight="27.0" prefWidth="203.0" text="         Enemy" textAlignment="CENTER">
+                                 <font>
+                                    <Font name="Arial" size="24.0" />
+                                 </font>
+                              </Label>
+                              <Separator prefHeight="21.0" prefWidth="186.0" />
+                              <TilePane prefHeight="200.0" prefWidth="200.0">
+                                 <children>
+                                    <Label fx:id="aliveShipsEnemy" prefHeight="22.0" prefWidth="211.0" />
+                                    <Label fx:id="availableShootsEnemy" layoutX="10.0" layoutY="10.0" prefHeight="22.0" prefWidth="211.0" />
+                                    <Label fx:id="pointsEnemy" layoutX="10.0" layoutY="32.0" prefHeight="22.0" prefWidth="211.0" />
+                                    <Label fx:id="successfulShotsRateEnemy" layoutX="10.0" layoutY="54.0" prefHeight="22.0" prefWidth="211.0" />
+                                 </children>
+                              </TilePane>
+                           </children>
+                        </VBox>
+                     </children>
+                  </Pane>
+                  <Pane layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="223.0" />
+               </children>
+            </HBox>
+         </top>
+      </BorderPane>
+      <Pane prefHeight="500.0" prefWidth="1200.0">
+         <children>
+            <Label fx:id="resultLabel" alignment="CENTER" layoutX="248.0" layoutY="61.0" prefHeight="62.0" prefWidth="705.0" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <HBox prefHeight="500.0" prefWidth="1200.0">
+         <children>
+            <Pane prefHeight="474.0" prefWidth="187.0" />
+            <VBox prefHeight="200.0" prefWidth="826.0">
+               <children>
+                  <Pane prefHeight="67.0" prefWidth="826.0">
+                     <children>
+                        <Label alignment="CENTER" layoutX="230.0" layoutY="18.0" prefHeight="27.0" prefWidth="366.0" text="Enter coordinates to make a move:" textAlignment="CENTER">
+                           <font>
+                              <Font name="Arial" size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
+                  <Pane layoutX="10.0" layoutY="10.0" prefHeight="45.0" prefWidth="826.0">
+                     <children>
+                        <TextField fx:id="iCoordinate" layoutX="264.0" layoutY="2.0" />
+                        <TextField fx:id="jCoordinate" layoutX="413.0" layoutY="2.0" />
+                        <Button fx:id="shootButton" layoutX="568.0" layoutY="2.0" mnemonicParsing="false" onAction="#shootAction" text="Shoot" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="10.0" layoutY="10.0" prefHeight="67.0" prefWidth="826.0" />
+               </children>
+            </VBox>
+            <Pane layoutX="10.0" layoutY="10.0" prefHeight="474.0" prefWidth="187.0">
+               <children>
+                  <Label alignment="CENTER" layoutX="43.0" layoutY="82.0" prefHeight="19.0" prefWidth="130.0" text="Created by PixelTheory" textAlignment="CENTER">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+               </children></Pane>
+         </children>
+      </HBox>
+  </children>
+</VBox>
