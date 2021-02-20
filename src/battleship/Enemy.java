@@ -1,4 +1,4 @@
-package src.battleship;
+package battleship;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -281,7 +281,7 @@ public class Enemy extends Player {
 
         shootCoords = new Triplet<Integer, Integer, Integer>(randElem.getX(), randElem.getY(), 0);
         shoot(e, p, shootCoords.getX(), shootCoords.getY());
-        
+
         return shootCoords;
 
     }
@@ -327,6 +327,23 @@ public class Enemy extends Player {
         } while (!e.shoot(e, p, shootCoords.getX(), shootCoords.getY()));
 
         return shootCoords;
+    }
+
+    public Pair<Integer,Integer> help(Enemy e) {
+        Random randomGenerator = new Random();
+        ArrayList<Pair<Integer, Integer>> allAvailableEnemyShips = new ArrayList<>();
+        Pair<Integer, Integer> coords;
+
+        allAvailableEnemyShips.addAll(e.battleship.positions);
+        allAvailableEnemyShips.addAll(e.carrier.positions);
+        allAvailableEnemyShips.addAll(e.cruiser.positions);
+        allAvailableEnemyShips.addAll(e.submarine.positions);
+        allAvailableEnemyShips.addAll(e.destroyer.positions);
+
+        int index = randomGenerator.nextInt(allAvailableEnemyShips.size());
+        coords = allAvailableEnemyShips.get(index);
+
+        return coords;
     }
 
     private void printBotNextShots() {

@@ -1,4 +1,4 @@
-package src.battleship;
+package battleship;
 
 // pair class in order to create objects of any type which will hold two values.
 // this class was used for Coordinates.

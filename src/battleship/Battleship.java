@@ -1,4 +1,4 @@
-package src.battleship;
+package battleship;
 
 // class for battleship which calls constructor of ship with the right values
 public class Battleship extends Ship{

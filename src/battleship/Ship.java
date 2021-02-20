@@ -1,4 +1,4 @@
-package src.battleship;
+package battleship;
 
 import java.util.ArrayList;
 
@@ -9,6 +9,8 @@ public class Ship {
     public int shotPoints;
     public int bonusPoints;
     public ArrayList<Pair<Integer,Integer>> positions;
+    public ArrayList<Pair<Integer, Pair<Integer,Integer>>> positionsAndType;
+
 
     // constructor of ship. Every ship has a type, size, shotPoints, 
     //bonusPoints, positions arraylist (the tiles that this ship owns in grid)
@@ -19,7 +21,7 @@ public class Ship {
         this.shotPoints = shotPoints;
         this.bonusPoints = bonusPoints;
         positions = new ArrayList<Pair<Integer,Integer>>();
-
+        positionsAndType = new ArrayList<Pair<Integer, Pair<Integer,Integer>>>();
     }
 
     // method which returns the status of a ship.
@@ -57,7 +59,8 @@ public class Ship {
                             // place ship to player's grid and add it to the specific ship type's positions arraylist
                             p.grid.grid[cordX][j] = shipType;
                             positions.add(new Pair<Integer,Integer>(cordX, j));
-                       }
+                            positionsAndType.add(new Pair<>(shipType, new Pair<>(cordX, cordY)));
+                        }
                     }
                 }
             }
@@ -71,7 +74,8 @@ public class Ship {
                     else{
                         if (!validAdjacentTiles(p, i, cordY, type)) throw new AdjacentTilesException("Cannot place ship of type " + type + " because there is a ship in horizontal/vertical contact with it!");
                         p.grid.grid[i][cordY] = shipType;
-                        positions.add(new Pair<Integer,Integer>(i, cordY));
+                        positions.add(new Pair<>(i, cordY));
+                        positionsAndType.add(new Pair<>(shipType, new Pair<>(cordX, cordY)));
                     }
                 }
             }
@@ -85,10 +89,10 @@ public class Ship {
         int cordX, cordY;
 
         ArrayList<Pair<Integer, Integer>> result = new ArrayList<Pair<Integer, Integer>>();
-        result.add(new Pair<Integer, Integer>(x - 1, y));
-        result.add(new Pair<Integer, Integer>(x + 1, y));
-        result.add(new Pair<Integer, Integer>(x, y - 1));
-        result.add(new Pair<Integer, Integer>(x, y + 1));
+        result.add(new Pair<>(x - 1, y));
+        result.add(new Pair<>(x + 1, y));
+        result.add(new Pair<>(x, y - 1));
+        result.add(new Pair<>(x, y + 1));
 
         for (int i = 0; i < result.size(); i++) {
             Pair<Integer, Integer> coordinates = result.get(i);

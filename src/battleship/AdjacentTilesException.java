@@ -1,4 +1,4 @@
-package src.battleship;
+package battleship;
 
 // this exception is thrown when a ship has other ships in horizontal/vertical contact with it
 public class AdjacentTilesException extends Exception {

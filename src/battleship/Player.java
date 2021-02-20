@@ -1,4 +1,4 @@
-package src.battleship;
+package battleship;
 
 import java.util.ArrayList;
 
@@ -16,6 +16,7 @@ public class Player {
     int points;
     int successLastShot;
     int failLastShot;
+    int successfulShoots;
 
     public Player(String name){
         
@@ -24,114 +25,93 @@ public class Player {
         availableShoots = 40;
         intactShips = 5;
         points = 0;
+        successfulShoots = 0;
     }
   
   // method to shoot opponent. gets player (which might be the user or the bot), the enemy (which might be the user or the bot)
   // and x,y coordinates that is the target for the shoot. The logic here is that the numbering that was said in Grid.java 
   // is used. 
 	public boolean shoot(Player p, Player e, int x, int y) {
-        
+
         int valAtGrid = e.grid.shipTypeAtPos(x, y, e);
 
         switch(valAtGrid) {
             case 0:
-              if (p.name == "player") System.out.println("Your shot went in the sea!");
-              if (p.name == "enemy") System.out.println("Enemy's shot went in the sea!");
               e.grid.grid[x][y] = 7;
               failLastShot++;
               return true;
             
             case 1:
               e.shipShotAt(p, e, x, y, e.carrier.positions);
-              if (p.name == "player") System.out.println("You shot a ship of type 1! This ship has " + e.carrier.positions.size() + " parts left!");
-              if (p.name == "enemy") System.out.println("Enemy shot your ship of type 1! This ship has " + e.carrier.positions.size() + " parts left!");
               p.points += e.carrier.shotPoints;
               p.successLastShot++;
+              p.successfulShoots++;
               if (e.carrier.checkStatus() == "sank"){
-                if (p.name == "player") System.out.println("Congrats! You sank enemy's ship of type 1!");
-                if (p.name == "enemy") System.out.println("Oh snap! Enemy sank your ship of type 1!");
                 p.points += e.carrier.bonusPoints;
                 e.intactShips--;
-              }                
+              }
               return true;
             
             case 2:
               e.shipShotAt(p, e, x, y, e.battleship.positions);
-              if (p.name == "player") System.out.println("You shot a ship of type 2! This ship has " + e.battleship.positions.size() + " parts left!");
-              if (p.name == "enemy") System.out.println("Enemy shot your ship of type 2! This ship has " + e.battleship.positions.size() + " parts left!");
               p.points += e.battleship.shotPoints;
               p.successLastShot++;
+              p.successfulShoots++;
               if (e.battleship.checkStatus() == "sank"){
-                if (p.name == "player") System.out.println("Congrats! You sank enemy's ship of type 2!");
-                if (p.name == "enemy") System.out.println("Oh snap! Enemy sank your ship of type 2!");
                 p.points += e.battleship.bonusPoints;
                 e.intactShips--;
-              } 
+              }
               return true;
-            
+
             case 3:
               e.shipShotAt(p, e, x, y, e.cruiser.positions);
-              if (p.name == "player") System.out.println("You shot a ship of type 3! This ship has " + e.cruiser.positions.size() + " parts left!");
-              if (p.name == "enemy") System.out.println("Enemy shot your ship of type 3! This ship has " + e.cruiser.positions.size() + " parts left!");
               p.points += e.cruiser.shotPoints;
               p.successLastShot++;
+              p.successfulShoots++;
               if (e.cruiser.checkStatus() == "sank"){
-                if (p.name == "player") System.out.println("Congrats! You sank enemy's ship of type 3!");
-                if (p.name == "enemy") System.out.println("Oh snap! Enemy sank your ship of type 3!");
                 p.points += e.cruiser.bonusPoints;
                 e.intactShips--;
-              } 
+              }
               return true;
             
             case 4:
               e.shipShotAt(p, e, x, y, e.submarine.positions);
-              if (p.name == "player") System.out.println("You shot a ship of type 4! This ship has " + e.submarine.positions.size() + " parts left!");
-              if (p.name == "enemy") System.out.println("Enemy shot your ship of type 4! This ship has " + e.submarine.positions.size() + " parts left!");
               p.points += e.submarine.shotPoints;
               p.successLastShot++;
+              p.successfulShoots++;
               if (e.submarine.checkStatus() == "sank"){
-                if (p.name == "player") System.out.println("Congrats! You sank enemy's ship of type 4!");
-                if (p.name == "enemy") System.out.println("Oh snap! Enemy sank your ship of type 4!");
                 p.points += e.submarine.bonusPoints;
                 e.intactShips--;
-              } 
+              }
               return true;
             
             case 5:
               e.shipShotAt(p, e, x, y, e.destroyer.positions);
-              if (p.name == "player") System.out.println("You shot a ship of type 5! This ship has " + e.destroyer.positions.size() + " parts left!");
-              if (p.name == "enemy") System.out.println("Enemy shot your ship of type 5! This ship has " + e.submarine.positions.size() + " parts left!");
               p.points += e.destroyer.shotPoints;
               p.successLastShot++;
+              p.successfulShoots++;
               if (e.destroyer.checkStatus() == "sank"){
-                if (p.name == "player") System.out.println("Congrats! You sank enemy's ship of type 5!");
-                if (p.name == "enemy") System.out.println("Oh snap! Enemy sank your ship of type 5!");
                 p.points += e.destroyer.bonusPoints;
                 e.intactShips--;
-              } 
+              }
               return true;
-            
-            case 6:
-              if (p.name == "player") System.out.println("You already shot at this position! It's a part of a ship that's hit!");
-              return false;
-            
+
             default:
-              if (p.name == "player") System.out.println("You already shot at this position! It's sea!");
               return false;
           }
 	}
 
-  // method to replace value in grid so as the ship is shot. Code that means a ship is shot is 6.
-  // so place to x,y number 6 and remove that x,y from that specific's ship type that tile
-  private void shipShotAt(Player p, Player e, int x, int y, ArrayList<Pair<Integer, Integer>> positions) {
-    e.grid.grid[x][y] = 6;
-    int index = 0;
-    for (Pair<Integer, Integer> pos : positions) {
-      if (pos.getX() == x && pos.getY() == y){
-        positions.remove(index);
-        break;
-      }
-      index++;
-    }     
-  }
+    // method to replace value in grid so as the ship is shot. Code that means a ship is shot is 6.
+    // so place to x,y number 6 and remove that x,y from that specific's ship type that tile
+    private void shipShotAt(Player p, Player e, int x, int y, ArrayList<Pair<Integer, Integer>> positions) {
+        e.grid.grid[x][y] = 6;
+        int index = 0;
+        for (Pair<Integer, Integer> pos : positions) {
+            if (pos.getX() == x && pos.getY() == y){
+            positions.remove(index);
+            break;
+            }
+            index++;
+        }
+    }
 }

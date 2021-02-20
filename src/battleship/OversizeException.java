@@ -1,4 +1,4 @@
-package src.battleship;
+package battleship;
 
 // this exception is thrown when a ship gets out of grid bounds
 public class OversizeException extends Exception {
