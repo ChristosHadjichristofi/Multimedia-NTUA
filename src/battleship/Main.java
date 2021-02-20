@@ -73,6 +73,7 @@ public class Main {
         Boolean move = false;
         int x, y;
         String difficulty;
+        Triplet<Integer, Integer, Integer> asd;
 
         do {
             
@@ -109,19 +110,19 @@ public class Main {
             else {
                 switch(difficulty) {
                     case "Medium":
-                      enemy.moveMedium(player, enemy);
+                      asd = enemy.moveMedium(player, enemy);
                       break;
                     case "Hard":
-                      enemy.moveHard(player, enemy);
+                      asd = enemy.moveHard(player, enemy);
                       break;
                     case "Impossible":
-                      enemy.moveImpossible(player, enemy);
+                      asd = enemy.moveImpossible(player, enemy);
                       break;
                     default:
-                      enemy.moveEasy(player, enemy);
+                      asd =enemy.moveEasy(player, enemy);
                       break;
                   }
-                
+                System.out.println(asd.getX() + " " + asd.getY());
                 move = true;
                 enemy.availableShoots--;
             }
