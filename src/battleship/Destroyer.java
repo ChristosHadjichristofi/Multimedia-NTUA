@@ -1,6 +1,8 @@
 package battleship;
 
-// class for destroyer which calls constructor of ship with the right values
+/**
+ * class for destroyer which calls constructor of ship with the right values
+ */
 public class Destroyer extends Ship {
     
     public Destroyer() {

@@ -1,27 +1,34 @@
 package battleship;
 
-/*
-    For the grids, there is a list that shows which number represents what:
-    0 --> sea
-    1 --> carrier
-    2 --> battleship
-    3 --> cruiser
-    4 --> submarine
-    5 --> destroyer
-    6 --> hit ship
-    7 --> hit sea
-*/
+/**
+ * For the grids, there is a list that shows which number represents what:
+ * 0 --> sea
+ * 1 --> carrier
+ * 2 --> battleship
+ * 3 --> cruiser
+ * 4 --> submarine
+ * 5 --> destroyer
+ * 6 --> hit ship
+ * 7 --> hit sea
+ *
+ * class for Grid
+ */
 public class Grid {
     
     public static final int GRID_SIZE = 10;
     public int [][] grid;
 
+    /**
+     * constructor for Grid
+     */
     public Grid() {
         grid = new int [GRID_SIZE][GRID_SIZE];
         initGrid(); 
     }
 
-    // method to initialize grid to zero (which is sea)
+    /**
+     * method to initialize grid to zero (which is sea)
+     */
     public void initGrid() {
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0 ; j < GRID_SIZE; j++) {
@@ -30,12 +37,21 @@ public class Grid {
         }
     }
 
-    // method to change a value at the grid
+    /**
+     * method to change a value at the grid
+     * @param x: cord X
+     * @param y: cord Y
+     * @param val: val to be placed at x,y
+     * this method is not used any more
+     */
     public void changeGrid(int x, int y, int val) {
         grid[x][y] = val;
     }
 
-    // method to print either player's or enemy's grid.
+    /**
+     * method to print either player's or enemy's grid.
+     * this method was used when ui was not implemented and now is not used
+     */
     public void printMyGridView() {
         for (int i = 0; i < GRID_SIZE; ++i) {
             for (int j = 0; j < GRID_SIZE; ++j) {
@@ -45,17 +61,26 @@ public class Grid {
         }
     }
 
-    // method to print player's/enemy's grid specific row.
+    /**
+     * method to print player's/enemy's grid specific row.
+     * @param i: number of row
+     *
+     * this method was used when ui was not implemented and now is not used
+     */
     public void printMyGridViewRow(int i) {
         for (int j = 0; j < GRID_SIZE; j++)
             System.out.print(grid[i][j] + " ");
         System.out.print("   |   ");
     }
-    
-    // method to print opponent's board to see only the tiles that he shot.
-    // so if this method is used for player object, it will show the grid of the enemy but
-    // only the tiles that player shot will be shown (with O the failed shots, with X the successful shots)
-    // same goes for enemy, if this method is called for enemy object.    
+
+    /**
+     * method to print opponent's board to see only the tiles that he shot.
+     * so if this method is used for player object, it will show the grid of the enemy but
+     * only the tiles that player shot will be shown (with O the failed shots, with X the successful shots)
+     * same goes for enemy, if this method is called for enemy object.
+     *
+     * this method was used when ui was not implemented and now is not used
+     */
     public void printEnemyGridView(){
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; ++j) {
@@ -66,8 +91,13 @@ public class Grid {
             System.out.println("");
         }
     }
-    
-    // does the same thing as printEnemyGridView() but instead it prints a specific row        
+
+    /**
+     * does the same thing as printEnemyGridView() but instead it prints a specific row
+     * @param i: number of row
+     *
+     * this method was used when ui was not implemented and now is not used
+     */
     public void printEnemyGridViewRow(int i) {
         for (int j = 0; j < GRID_SIZE; j++) {
             if (grid[i][j] == 7) System.out.print("O" + " ");
@@ -76,14 +106,27 @@ public class Grid {
         }
         System.out.println("");
     }
-    
-    // returns the type of ship at position x,y
+
+    /**
+     * returns the type of ship at position x,y
+     * @param x: coord X
+     * @param y: coord Y
+     * @param p: player object
+     * @return value of player.grid at x,y
+     */
     public int shipTypeAtPos(int x, int y, Player p) {
         return p.grid.grid[x][y]; 
     }
 
-    // combines printMyGridView and printEnemyGridView, in order to show to the player
-    // his grid, but also his opponent's grid (only with the shots player did, everything else is hidden)
+    /**
+     * combines printMyGridView and printEnemyGridView, in order to show to the player
+     * his grid, but also his opponent's grid (only with the shots player did, everything else is hidden)
+     * @param p player object
+     * @param e enemy object
+     *
+     * this method was used when ui was not implemented and now is not used
+     */
+    //
 	public void printGrids(Player p, Player e) {
         System.out.print("Player's Points: " + String.format("%-" + 6 + "s", p.points) + "|");
         System.out.println("   Enemy's Points: " + e.points);

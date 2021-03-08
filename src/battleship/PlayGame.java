@@ -1,7 +1,5 @@
 package battleship;
 
-import javafx.scene.control.Alert;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,6 +15,11 @@ public class PlayGame {
     static ArrayList<Pair<Integer, Pair<Integer, Integer>>> allPlayerShips;
     static ArrayList<Pair<Integer, Pair<Integer, Integer>>> allEnemyShips;
 
+    /**
+     * method that starts the game, deploys ships and throws possible alerts using a object (object of main)
+     * @param ScenarioID is the number/text of scenario name
+     * @param a is the object of Main
+     */
     public static void startGame(String ScenarioID, Main a) {
 
         player = new Player("player");
@@ -51,7 +54,17 @@ public class PlayGame {
     }
 
 
-    // method that deploys the ships of both player and enemy. uses the readInput method to complete this task
+    /**
+     * method that deploys the ships of both player and enemy. uses the readInput method to complete this task
+     * @param pathPlayer string that holds where player's scenario is
+     * @param pathEnemy string that holds where enemy's scenario is
+     * @throws IOException exception for IO
+     * @throws OversizeException exception for ship getting out of bounds
+     * @throws OverlapTilesException exception for ship overlapping with an other ship
+     * @throws AdjacentTilesException exception when every tile around a ship are not empty
+     * @throws InvalidCountException exception when a ship type exists more than one time
+     * @throws NecessaryFileException exception when necessary file is missing
+     */
     private static void deployShips(String pathPlayer, String pathEnemy)
             throws IOException, OversizeException, OverlapTilesException, AdjacentTilesException, InvalidCountException, NecessaryFileException {
 
@@ -62,9 +75,7 @@ public class PlayGame {
             allPlayerShips.addAll(player.submarine.positionsAndType);
             allPlayerShips.addAll(player.destroyer.positionsAndType);
             allPlayerShips.addAll(player.battleship.positionsAndType);
-        } catch (InvalidCountException e) {
-            throw(e);
-        } catch (NecessaryFileException e) {
+        } catch (InvalidCountException | NecessaryFileException e) {
             throw(e);
         }
 
@@ -75,18 +86,19 @@ public class PlayGame {
             allEnemyShips.addAll(enemy.submarine.positionsAndType);
             allEnemyShips.addAll(enemy.destroyer.positionsAndType);
             allEnemyShips.addAll(enemy.battleship.positionsAndType);
-        } catch (InvalidCountException e) {
-            throw(e);
-        } catch (NecessaryFileException e) {
+        } catch (InvalidCountException | NecessaryFileException e) {
             throw(e);
         }
 
-	}
+    }
 
-    // method to show who won and the points
+    /**
+     * method to show who won and the points
+     * @return string to be shown in ui
+     */
 	public static String gameEnded() {
 
-        String text = "";
+        String text;
 
         if (player.intactShips == 0)
             text = "You lost. All of your ships have been destroyed!\n Your Points: " + player.points;
@@ -100,13 +112,22 @@ public class PlayGame {
         return text;
     }
 
-    public static boolean playerTurn(int x, int y) {
+    /**
+     * @param x coord x where player shot
+     * @param y coord y where player shot
+     * @return true if shot completed, false if it did not so as player will shoot till his turn is completed
+     */
+    public boolean playerTurn(int x, int y) {
         if (!player.shoot(player, enemy, x, y)) return false;
         player.availableShoots--;
         return true;
     }
 
-    public static Triplet<Integer, Integer, Integer> enemyTurn(int d) {
+    /**
+     * @param d difficulty level, so as bot plays with the right logic
+     * @return enemyCoords: the shot that enemy made
+     */
+    public Triplet<Integer, Integer, Integer> enemyTurn(int d) {
         Triplet<Integer, Integer, Integer> enemyCoords;
         switch (d) {
             case 2:
@@ -127,28 +148,34 @@ public class PlayGame {
 
     }
 
+    /**
+     * method to decide who plays first (enemy or player)
+     * @return true or false
+     */
     public static boolean coinFlip() {
         // Math random returns a value from 0.0 to 1.0. If it is less than 0.5 then
         // player is playing first, else the computer is playing first.
-        return (Math.random() < 0.5) ? true : false;
+        return Math.random() < 0.5;
     }
 
-    // method that completes the reading and deployment of ships
-    public static void readInput(Player p, String path) throws IOException, InvalidCountException, OversizeException,
-            OverlapTilesException, AdjacentTilesException, NecessaryFileException {
+    /**
+     * method that completes the reading and deployment of ships
+     * @param p the object of player (or enemy) that this file belong to
+     * @param path string which shows where the input file is
+     * @throws IOException exception for IO
+     * @throws InvalidCountException exception when a ship type exists more than one time
+     * @throws NecessaryFileException exception when necessary file is missing
+     */
+    public static void readInput(Player p, String path) throws IOException, InvalidCountException, NecessaryFileException {
 
         String line;
         int shipType, cordX, cordY, orientation;
         File input = new File(path);
         BufferedReader reader;
 
-
         try {
-
             reader = new BufferedReader(new FileReader(input));
-
             try {
-
                 while ((line = reader.readLine()) != null) {
 
                     shipType = Character.getNumericValue(line.charAt(0));
@@ -217,9 +244,7 @@ public class PlayGame {
                     }
                 }
 
-            } finally {
-                if (reader != null) reader.close();
-            }
+            } finally { reader.close(); }
 
         } catch (FileNotFoundException e) {
             throw new NecessaryFileException("NecessaryFileException: necessary file (" + input + ") was not present." );

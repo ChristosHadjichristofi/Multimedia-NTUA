@@ -12,22 +12,32 @@ public class Ship {
     public ArrayList<Pair<Integer, Pair<Integer,Integer>>> positionsAndType;
 
 
-    // constructor of ship. Every ship has a type, size, shotPoints, 
-    //bonusPoints, positions arraylist (the tiles that this ship owns in grid)
+    /**
+     *  constructor of ship. Every ship has a type, size, shotPoints,
+     *  bonusPoints, positions arraylist (the tiles that this ship owns in grid)
+     * @param type type of ship
+     * @param size size of ship
+     * @param shotPoints points to get when shot
+     * @param bonusPoints points to get when sank
+     */
     public Ship(int type, int size, int shotPoints, int bonusPoints){
         
         this.type = type;
         this.size = size;
         this.shotPoints = shotPoints;
         this.bonusPoints = bonusPoints;
-        positions = new ArrayList<Pair<Integer,Integer>>();
-        positionsAndType = new ArrayList<Pair<Integer, Pair<Integer,Integer>>>();
+        positions = new ArrayList<>();
+        positionsAndType = new ArrayList<>();
     }
 
-    // method which returns the status of a ship.
-    // if positions arraylist has the same size as size then ship is intact
-    // if is less than size then is hit
-    // if is zero then is sank
+    /**
+     * method which returns the status of a ship.
+     * if positions arraylist has the same size as size then ship is intact
+     * if is less than size then is hit
+     * if is zero then is sank
+     * @return the status of the ship (intact / sank / hit)
+     */
+    //
     public String checkStatus() {
         if (positions.size() == size){
             return "intact";
@@ -38,7 +48,18 @@ public class Ship {
         return "hit";
     }
 
-    // method which adds ship on player's/enemy's grid
+    /**
+     * method which adds ship on player's/enemy's grid
+     *
+     * @param p player which the ship will belong
+     * @param shipType type of ship
+     * @param cordX x coord where ship will be placed
+     * @param cordY y coord where ship will be placed
+     * @param orientation orientation of ship
+     * @throws OversizeException exception for ship getting out of bounds
+     * @throws OverlapTilesException exception for ship overlapping with an other ship
+     * @throws AdjacentTilesException exception when every tile around a ship are not empty
+     */
     public void addShip(Player p, int shipType, int cordX, int cordY, int orientation) throws OversizeException, OverlapTilesException,
             AdjacentTilesException {
         
@@ -59,7 +80,7 @@ public class Ship {
                             // place ship to player's grid and add it to the specific ship type's positions arraylist
                             p.grid.grid[cordX][j] = shipType;
                             positions.add(new Pair<Integer,Integer>(cordX, j));
-                            positionsAndType.add(new Pair<>(shipType, new Pair<>(cordX, cordY)));
+                            positionsAndType.add(new Pair<>(shipType, new Pair<>(cordX, j)));
                         }
                     }
                 }
@@ -75,20 +96,28 @@ public class Ship {
                         if (!validAdjacentTiles(p, i, cordY, type)) throw new AdjacentTilesException("Cannot place ship of type " + type + " because there is a ship in horizontal/vertical contact with it!");
                         p.grid.grid[i][cordY] = shipType;
                         positions.add(new Pair<>(i, cordY));
-                        positionsAndType.add(new Pair<>(shipType, new Pair<>(cordX, cordY)));
+                        positionsAndType.add(new Pair<>(shipType, new Pair<>(i, cordY)));
                     }
                 }
             }
         }
     }
 
-    // method which finds all adjacent tiles that are valid (not getting out of bounds) and returns
-    // true if all tiles surrounding that x,y are ok (there isn't a ship exactly next to the other either horizontally or vertically)
-    // or returns false if there is a ship exactly next to the other (horizontally/vertically)
+    /**
+     * method which finds all adjacent tiles that are valid (not getting out of bounds) and returns
+     * true if all tiles surrounding that x,y are ok (there isn't a ship exactly next to the other either horizontally or vertically)
+     * or returns false if there is a ship exactly next to the other (horizontally/vertically)
+     *
+     * @param p player that this ship belongs (might be enemy)
+     * @param x coord y of ship
+     * @param y coord y of ship
+     * @param t type of ship
+     * @return true if ship placed in a valid place, false if not
+     */
     private boolean validAdjacentTiles(Player p, int x, int y, int t) {
         int cordX, cordY;
 
-        ArrayList<Pair<Integer, Integer>> result = new ArrayList<Pair<Integer, Integer>>();
+        ArrayList<Pair<Integer, Integer>> result = new ArrayList<>();
         result.add(new Pair<>(x - 1, y));
         result.add(new Pair<>(x + 1, y));
         result.add(new Pair<>(x, y - 1));

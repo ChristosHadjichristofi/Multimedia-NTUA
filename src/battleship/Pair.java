@@ -1,7 +1,12 @@
 package battleship;
 
-// pair class in order to create objects of any type which will hold two values.
-// this class was used for Coordinates.
+/**
+ * pair class in order to create objects of any type which will hold two values.
+ * his class was used for Coordinates.
+ * @param <T1> whatever type you want
+ * @param <T2> whatever type you want
+ */
+//
 public class Pair<T1, T2> {
 
     private final T1 x;
