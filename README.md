@@ -1,5 +1,7 @@
 # Multimedia-NTUA
 
+**In this repo you can find both the src with gui and src without gui.**
+
 In this course there was a project that we created the Battleship board game with some minor adjustments. The project asked to be written in Java using the OOP principles. Both the boards of the player and the bot are been read from files (from medialab folder).
 
 * When the game starts, one of the players is randomly selected to make the first move. Both bot and the player can do max 40 moves. Game ends either when 40 moves are reached or when either the bot or the player sink the ships of his opponent.
@@ -15,3 +17,8 @@ In this course there was a project that we created the Battleship board game wit
 * Player can see latest 5 moves he made and the latest 5 moves the bot made from the menu 'Details'. He can also see the status of the enemy (bot) ships from 'Details'.
 
 * Player can (re)start, load, exit the game from the menu 'Application'.
+
+# GUI
+
+The gui is pretty simple and made with the help of SceneBuilder. 
+
