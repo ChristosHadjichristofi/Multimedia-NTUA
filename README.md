@@ -8,4 +8,10 @@ In this course there was a project that we created the Battleship board game wit
 
 * To make a move you can either click on opponent's (bot) board or from the input boxes and click shoot.
 
-* An other feature that i implemented was the 'Hint'. The player can get a hint of where an enemy ship is (the enemy board will flash when hint is pressed). The player loses some moves when hint is used. More specifically the player loses X moves, where X is the amount of times he/she used the 'Hint'.
+* An other feature that i implemented was the 'Hint' (menu 'Hint'). The player can get a hint of where an enemy ship is (the enemy board will flash when hint is pressed). The player loses some moves when hint is used. More specifically the player loses X moves, where X is the amount of times he/she used the 'Hint'.
+
+* In the end of the game, if the player could not sink the ships of the bot, all tiles which belong to a ship will change color to Gold.
+
+* Player can see latest 5 moves he made and the latest 5 moves the bot made from the menu 'Details'. He can also see the status of the enemy (bot) ships from 'Details'.
+
+* Player can (re)start, load, exit the game from the menu 'Application'.
