@@ -1,11 +1,11 @@
 # Multimedia-NTUA
 
 <p align="center">
-	<img alt="Byte Code Size" src="https://img.shields.io/github/languages/code-size/ChristosHadjichristofi/compilers-NTUA?color=red" />
-	<img alt="# Lines of Code" src="https://img.shields.io/tokei/lines/github/ChristosHadjichristofi/compilers-NTUA?color=red" />
-	<img alt="# Languages Used" src="https://img.shields.io/github/languages/count/ChristosHadjichristofi/compilers-NTUA?color=yellow" />
-	<img alt="Top language" src="https://img.shields.io/github/languages/top/ChristosHadjichristofi/compilers-NTUA?color=yellow" />
-	<img alt="Last commit" src="https://img.shields.io/github/last-commit/ChristosHadjichristofi/compilers-NTUA?color=important" />
+	<img alt="Byte Code Size" src="https://img.shields.io/github/languages/code-size/ChristosHadjichristofi/Multimedia-NTUA?color=red" />
+	<img alt="# Lines of Code" src="https://img.shields.io/tokei/lines/github/ChristosHadjichristofi/Multimedia-NTUA?color=red" />
+	<img alt="# Languages Used" src="https://img.shields.io/github/languages/count/ChristosHadjichristofi/Multimedia-NTUA?color=yellow" />
+	<img alt="Top language" src="https://img.shields.io/github/languages/top/ChristosHadjichristofi/Multimedia-NTUA?color=yellow" />
+	<img alt="Last commit" src="https://img.shields.io/github/last-commit/ChristosHadjichristofi/Multimedia-NTUA?color=important" />
 </p>
 
 **In this repo you can find both the src with gui and src without gui.**
