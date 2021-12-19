@@ -1,5 +1,13 @@
 # Multimedia-NTUA
 
+<p align="center">
+	<img alt="Byte Code Size" src="https://img.shields.io/github/languages/code-size/ChristosHadjichristofi/compilers-NTUA?color=red" />
+	<img alt="# Lines of Code" src="https://img.shields.io/tokei/lines/github/ChristosHadjichristofi/compilers-NTUA?color=red" />
+	<img alt="# Languages Used" src="https://img.shields.io/github/languages/count/ChristosHadjichristofi/compilers-NTUA?color=yellow" />
+	<img alt="Top language" src="https://img.shields.io/github/languages/top/ChristosHadjichristofi/compilers-NTUA?color=yellow" />
+	<img alt="Last commit" src="https://img.shields.io/github/last-commit/ChristosHadjichristofi/compilers-NTUA?color=important" />
+</p>
+
 **In this repo you can find both the src with gui and src without gui.**
 
 In this course there was a project that we created the Battleship board game with some minor adjustments. The project asked to be written in Java using the OOP principles. Both the boards of the player and the bot are been read from files (from medialab folder).
